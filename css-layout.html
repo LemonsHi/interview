@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>css 布局</title>
+    <!-- <style media="screen">
+      .left{
+        width: 300px;height: 300px; background: yellow; float: left;
+      }
+      .right{
+        width: 300px; height: 300px; background: green; float: right;
+      }
+      .middle{
+        height: 300px; background: red; margin-left: 310px; margin-right: 310px;
+      }
+    </style> -->
+    <!-- <style media="screen">
+      .left{
+          background: yellow;
+          width: 300px;
+          height: 300px;
+          position: absolute;
+          top: 0;
+          left: 0;
+      }
+      .middle{
+          height: 300px;
+          margin: 0 310px;
+          background: red;
+      }
+      .right{
+          height: 300px;
+          width: 300px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          background: green;
+      }
+    </style> -->
+    <style media="screen">
+      .content {
+  			overflow: hidden;
+  			padding: 0 310px;
+  		}
+
+  		.middle {
+  			position:relative;
+  			width: 100%;
+  			float: left;
+  			height: 80px;
+  			background: green;
+  		}
+
+  		.left {
+  			position:relative;
+  			width: 300px;
+  			float: left;
+        height: 80px;
+        margin-left: -100%;
+        left: -310px;
+  			background: yellow;
+  		}
+  		.right {
+  			position:relative;
+  			width: 300px;
+  			float: left;
+        height: 80px;
+        margin-left: -300px;
+        right: -310px;
+  			background: yellow;
+  		}
+    </style>
+    <!-- <style media="screen">
+      .content {
+        overflow: hidden;
+      }
+
+      .middle {
+        width: 100%;
+        float: left;
+      }
+      .inner-middle{
+        height: 80px;
+        margin: 0 310px;
+        background: green;
+      }
+      .left {
+  			width: 300px;
+  			float: left;
+  			height: 80px;
+        margin-left: -100%;
+  			background: yellow;
+  		}
+      .right {
+  			width: 300px;
+  			float: left;
+  			height: 80px;
+  			background: pink;
+        margin-left: -300px;
+  		}
+    </style> -->
+  </head>
+  <body>
+    <!-- float 布局 -->
+    <!-- <div class="left">左栏</div>
+    <div class="right">右栏</div>
+    <div class="middle">中间栏</div> -->
+
+    <!-- poastion 布局 -->
+    <!-- <div class="left">左栏</div>
+    <div class="middle">中间栏</div>
+    <div class="right">右栏</div> -->
+
+    <!-- 圣杯布局 -->
+    <div class="content">
+  		<div class="middle"></div>
+  		<div class="left"></div>
+  		<div class="right"></div>
+  	</div>
+
+    <!-- 双飞翼布局 -->
+    <!-- <div class="content">
+		<div class="middle">
+			<div class="inner-middle"></div>
+		</div>
+		<div class="left"></div>
+		<div class="right"></div> -->
+	</div>
+  </body>
+</html>

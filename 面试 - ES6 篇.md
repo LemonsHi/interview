@@ -317,3 +317,134 @@ ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都
 - 不可以当作构造函数，也就是说，不可以使用new命令，否则会抛出一个错误
 - 不可以使用arguments对象，该对象在函数体内不存在。如果要用，可以用 rest 参数代替
 - 不可以使用yield命令，因此箭头函数不能用作 Generator 函数
+
+5. Iterator
+
+需要一种统一的接口机制，来处理所有不同的数据结构。
+
+遍历器`（Iterator）`就是这样一种机制。它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署 `Iterator` 接口，就可以完成遍历操作（即依次处理该数据结构的所有成员）。
+
+**`Iterator` 的作用有三个：**
+- 一是为各种数据结构，提供一个统一的、简便的访问接口；
+- 二是使得数据结构的成员能够按某种次序排列；
+- 三是 `ES6` 创造了一种新的遍历命令 `for...of` `循环，Iterator` 接口主要供 `for...of` 消费。
+
+```javascript
+function makeIterator(array) {
+  var nextIndex = 0;
+  return {
+    next: function() {
+      return nextIndex < array.length ?
+        {value: array[nextIndex++]} :
+        {done: true};
+    }
+  };
+}
+```
+
+**具备条件：**
+- 具备 `next` 方法，遍历器 `(iterator)` 会自动调用 `next` 方法进行遍历；
+- 返回对象，对象格式 `{value: value, done: false} || {value: undefined, done: true}` 如果返回的 `done: true` 便会停止遍历。
+
+`ES6` 规定，默认的 `Iterator` 接口部署在数据结构的 `Symbol.iterator` 属性，或者说，一个数据结构只要具有 `Symbol.iterator` 属性，就可以认为是“可遍历的”`（iterable）`。
+
+```javascript
+const obj = {
+  [Symbol.iterator] : function () {
+    return {
+      next: function () {
+        return {
+          value: 1,
+          done: true
+        };
+      }
+    };
+  }
+};
+```
+
+**原生具备 `Iterator` 接口的数据结构如下:**
+- Array
+- Map
+- Set
+- String
+- TypedArray
+- 函数的 arguments 对象
+- NodeList 对象
+
+**调用 `Iterator` 接口的场合**
+- 解构赋值
+- 扩展运算符
+- yield*
+
+**`Iterator` 接口与 `Generator` 函数**
+
+`Symbol.iterator` 方法的最简单实现。
+
+```javascript
+let obj = {
+  * [Symbol.iterator]() {
+    yield 'hello';
+    yield 'world';
+  }
+};
+
+for (let x of obj) {
+  console.log(x);
+}
+// "hello"
+// "world"
+```
+
+**遍历器对象的 `return()`，`throw()`**
+
+遍历器对象除了具有 `next` 方法，还可以具有 `return` 方法和 `throw` 方法。如果你自己写遍历器对象生成函数，那么 `next` 方法是必须部署的，`return` 方法和 `throw` 方法是否部署是可选的。
+
+```javascript
+function readLinesSync(file) {
+  return {
+    [Symbol.iterator]() {
+      return {
+        next() {
+          return { done: false };
+        },
+        return() {
+          file.close();
+          return { done: true };
+        }
+      };
+    },
+  };
+}
+
+// 情况一
+for (let line of readLinesSync(fileName)) {
+  console.log(line);
+  break;
+}
+
+// 情况二
+for (let line of readLinesSync(fileName)) {
+  console.log(line);
+  throw new Error();
+}
+```
+上面代码中，情况一输出文件的第一行以后，就会执行 `return` 方法，关闭这个文件；情况二会在执行 `return` 方法关闭文件之后，再抛出错误。
+
+**计算生成的数据结构**
+
+- `entries()` 返回一个遍历器对象，用来遍历 `[键名, 键值]` 组成的数组。对于数组，键名就是索引值；对于 `Set`，键名与键值相同。`Map` 结构的 `Iterator` 接口，默认就是调用 `entries` 方法。
+- `keys()` 返回一个遍历器对象，用来遍历所有的键名。
+- `values()` 返回一个遍历器对象，用来遍历所有的键值。
+
+这三个方法调用后生成的遍历器对象，所遍历的都是计算生成的数据结构。
+
+```javascript
+let arr = ['a', 'b', 'c'];
+for (let pair of arr.entries()) {
+  console.log(pair);
+}
+// [0, 'a']
+// [1, 'b']
+// [2, 'c']
+```

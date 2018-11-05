@@ -327,7 +327,7 @@ ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都
 **`Iterator` 的作用有三个：**
 - 一是为各种数据结构，提供一个统一的、简便的访问接口；
 - 二是使得数据结构的成员能够按某种次序排列；
-- 三是 `ES6` 创造了一种新的遍历命令 `for...of` `循环，Iterator` 接口主要供 `for...of` 消费。
+- 三是 `ES6` 创造了一种新的遍历命令 `for...of` 循环，`Iterator` 接口主要供 `for...of` 消费。
 
 ```javascript
 function makeIterator(array) {

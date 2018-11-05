@@ -228,3 +228,48 @@ Module.prototype._compile = function(content, filename) {
 ```
 
 `Module._compile` 方法是同步执行的，所以 `Module._load` 要等它执行完成，才会向用户返回 `module.exports` 的值。
+
+**`Module._onload` 源码如下：**
+
+```javascript
+Module._load = function(request, parent, isMain) {
+
+  //  计算绝对路径
+  var filename = Module._resolveFilename(request, parent);
+
+  //  第一步：如果有缓存，取出缓存
+  var cachedModule = Module._cache[filename];
+  if (cachedModule) {
+    return cachedModule.exports;
+
+  // 第二步：是否为内置模块
+  if (NativeModule.exists(filename)) {
+    return NativeModule.require(filename);
+  }
+
+  // 第三步：生成模块实例，存入缓存
+  var module = new Module(filename, parent);
+  Module._cache[filename] = module;
+
+  // 第四步：加载模块
+  try {
+    module.load(filename);
+    hadException = false;
+  } finally {
+    if (hadException) {
+      delete Module._cache[filename];
+    }
+  }
+
+  // 第五步：输出模块的exports属性
+  return module.exports;
+};
+```
+
+**`Module._onload` 流程图如下：**
+
+<div align=center>
+
+![](https://image-static.segmentfault.com/327/020/3270203601-58ad22173618f_articlex)
+
+</div>
